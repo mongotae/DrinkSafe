@@ -15,17 +15,12 @@ public class AppInfo {
         public void init();
         public boolean filterApp(ApplicationInfo info);
     }
+    public Drawable icon;
+    public String applicationName;
 
-    // 아이콘
-    public Drawable mIcon = null;
-    // 어플리케이션 이름
-    public String mAppNaem = null;
-    // 패키지 명
-    public String mAppPackge = null;
-
-    /**
-     * 서드파티 필터
-     */
+    public AppInfo(){
+        super();
+    }
     public static final AppFilter THIRD_PARTY_FILTER = new AppFilter() {
         public void init() {
         }
@@ -41,14 +36,17 @@ public class AppInfo {
         }
     };
 
-    /**
-     * 알파벳 이름으로 정렬
-     */
     public static final Comparator<AppInfo> ALPHA_COMPARATOR = new Comparator<AppInfo>() {
         private final Collator sCollator = Collator.getInstance();
         @Override
         public int compare(AppInfo object1, AppInfo object2) {
-            return sCollator.compare(object1.mAppNaem, object2.mAppNaem);
+            return sCollator.compare(object1.applicationName, object2.applicationName);
         }
     };
+
+    public AppInfo(Drawable icon, String applicationName){
+        super();
+        this.icon = icon;
+        this.applicationName = applicationName;
+    }
 }

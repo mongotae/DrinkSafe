@@ -44,7 +44,7 @@ public class Voice extends Activity{
         switch (requestCode) {
             case RESULT_SPEECH: {
                 ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                if (text.get(0).equals("drink a lot")) {
+                if (text.get(0).equals("drink a lot") || text.get(0).equals("나 안 취했어")) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("Result")
                             .setMessage("Voice Recognition Success(Result is "+text.get(0)+")")
