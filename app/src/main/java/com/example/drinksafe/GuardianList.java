@@ -22,29 +22,28 @@ public class GuardianList extends ListActivity implements android.support.v4.app
 protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED)
-        {
-        if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_CONTACTS)){
-        AlertDialog.Builder builder = new AlertDialog.Builder(GuardianList.this,0);
-        builder.setTitle("Test Alert Dialog")
-        .setMessage("READ_CONTACTS permission is needed to complete the request! would you try to get permission again?")
-        .setNegativeButton("NO",null)
-        .setPositiveButton("Yes",new DialogInterface.OnClickListener(){
-public void onClick(DialogInterface dialog, int which){
-        ActivityCompat.requestPermissions(GuardianList.this, new String[]{Manifest.permission.READ_CONTACTS},123);
-        }
-        });
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED){
+                if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_CONTACTS)){
+                AlertDialog.Builder builder = new AlertDialog.Builder(GuardianList.this,0);
+                builder.setTitle("Test Alert Dialog")
+                .setMessage("READ_CONTACTS permission is needed to complete the request! would you try to get permission again?")
+                .setNegativeButton("NO",null)
+                .setPositiveButton("Yes",new DialogInterface.OnClickListener(){
+                        public void onClick(DialogInterface dialog, int which){
+                        ActivityCompat.requestPermissions(GuardianList.this, new String[]{Manifest.permission.READ_CONTACTS},123);
+                        }
+                });
         builder.show();
         }
         else
-        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_CONTACTS},123);
+                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_CONTACTS},123);
         }
         else{
-        String columns[] = new String[]{
-        ContactsContract.Contacts._ID,
-        ContactsContract.Contacts.DISPLAY_NAME,
-        ContactsContract.Contacts.STARRED,
-        ContactsContract.Contacts.HAS_PHONE_NUMBER
+                String columns[] = new String[]{
+                ContactsContract.Contacts._ID,
+                ContactsContract.Contacts.DISPLAY_NAME,
+                ContactsContract.Contacts.STARRED,
+                ContactsContract.Contacts.HAS_PHONE_NUMBER
         };
 
         String disp[] = new String[]{
@@ -63,13 +62,13 @@ public void onClick(DialogInterface dialog, int which){
         }
 public void onRequestPermissionResult(int requestCode,String permission[], int[] grantResults){
         if(requestCode == 123){
-        if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-        String columns[] = new String[]{
-        ContactsContract.Contacts._ID,
-        ContactsContract.Contacts.DISPLAY_NAME,
-        ContactsContract.Contacts.STARRED,
-        ContactsContract.Contacts.HAS_PHONE_NUMBER
-        };
+                if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                        String columns[] = new String[]{
+                        ContactsContract.Contacts._ID,
+                        ContactsContract.Contacts.DISPLAY_NAME,
+                        ContactsContract.Contacts.STARRED,
+                        ContactsContract.Contacts.HAS_PHONE_NUMBER
+                        };
 
         String disp[] = new String[]{
         ContactsContract.Contacts.DISPLAY_NAME,
