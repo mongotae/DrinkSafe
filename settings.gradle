@@ -1,1 +1,1 @@
-include ':app', ':alize-debug'
+include ':app', ':materiallockview'

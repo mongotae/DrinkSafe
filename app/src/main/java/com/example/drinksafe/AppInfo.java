@@ -1,10 +1,6 @@
 package com.example.drinksafe;
 
-import android.content.pm.ApplicationInfo;
 import android.graphics.drawable.Drawable;
-
-import java.text.Collator;
-import java.util.Comparator;
 
 /**
  * Created by MoonKyuTae on 2017-11-26.

@@ -21,7 +21,7 @@
         <activity android:name=".GuardianList" />
         <activity android:name=".BlockingAppList" />
         <activity android:name=".Test" />
-        <activity android:name=".Gyro" />
+        <activity android:name=".Pattern" />
     </application>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.INTERNET"/>

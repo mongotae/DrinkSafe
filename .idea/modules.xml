@@ -5,8 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/DrinkSafe.iml" filepath="$PROJECT_DIR$/DrinkSafe.iml" />
       <module fileurl="file://$PROJECT_DIR$/alize-debug/alize-debug.iml" filepath="$PROJECT_DIR$/alize-debug/alize-debug.iml" />
       <module fileurl="file://$PROJECT_DIR$/alize-debug/alize-debug.iml" filepath="$PROJECT_DIR$/alize-debug/alize-debug.iml" />
-      <module fileurl="file://$PROJECT_DIR$/alize-debug/alize-debug.iml" filepath="$PROJECT_DIR$/alize-debug/alize-debug.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/materiallockview/materiallockview.iml" filepath="$PROJECT_DIR$/materiallockview/materiallockview.iml" />
     </modules>
   </component>
 </project>

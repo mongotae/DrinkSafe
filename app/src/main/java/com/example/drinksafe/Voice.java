@@ -5,15 +5,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.speech.SpeechRecognizer;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Locale;
 
 
 /**
@@ -50,14 +46,14 @@ public class Voice extends Activity{
                             .setMessage("Voice Recognition Success(Result is "+text.get(0)+")")
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Intent i = new Intent(Voice.this, Gyro.class);
+                                    Intent i = new Intent(Voice.this, Pattern.class);
                                     startActivity(i);
                                     finish();
                                 }
                             })
                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    Intent i = new Intent(Voice.this, Gyro.class);
+                                    Intent i = new Intent(Voice.this, Pattern.class);
                                     startActivity(i);
                                     finish();
                                 }

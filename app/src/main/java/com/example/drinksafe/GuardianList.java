@@ -1,13 +1,8 @@
 package com.example.drinksafe;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.app.ListActivity;
-import android.app.ProgressDialog;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
