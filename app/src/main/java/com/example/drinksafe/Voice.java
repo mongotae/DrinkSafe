@@ -8,6 +8,7 @@ import android.speech.RecognizerIntent;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -32,18 +33,17 @@ public class Voice extends Activity{
                 startActivityForResult(i, RESULT_SPEECH);
             }
         });
-
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        try{
         switch (requestCode) {
             case RESULT_SPEECH: {
                 ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 if (text.get(0).equals("drink a lot") || text.get(0).equals("나 안 취했어")) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("Result")
-                            .setMessage("Voice Recognition Success(Result is "+text.get(0)+")")
+                            .setMessage("Voice Recognition Success(Result is " + text.get(0) + ")")
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     Intent i = new Intent(Voice.this, Pattern.class);
@@ -60,11 +60,10 @@ public class Voice extends Activity{
                             })
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
-                }
-                else {
+                } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("Result")
-                            .setMessage("Voice Recognition Fail(Result is "+text.get(0)+")")
+                            .setMessage("Voice Recognition Fail(Result is " + text.get(0) + ")")
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     finish();
@@ -81,6 +80,10 @@ public class Voice extends Activity{
                 break;
             }
 
+        }
+        }catch (NullPointerException e){
+            Toast.makeText(this, "Do not disturb recognition. Retry!", Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 }

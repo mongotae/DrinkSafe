@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.amnix.materiallockview.MaterialLockView;
 
@@ -16,27 +17,25 @@ import java.util.List;
 public class Pattern extends AppCompatActivity {
     private String CorrectPattern = "123";
     private MaterialLockView materialLockView;
+    private String[] key = {"1234", "4567", "123", "4589", "4753"};
+    private int ran;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pattern);
         materialLockView = (MaterialLockView) findViewById(R.id.pattern);
-
+        ran = randomRange(0,key.length-1);
         materialLockView.setOnPatternListener(new MaterialLockView.OnPatternListener() {
             @Override
             public void onPatternDetected(List<MaterialLockView.Cell> pattern, String SimplePattern) {
                 Log.e("SimplePattern", SimplePattern);
                 if (!SimplePattern.equals(CorrectPattern)) {
-
                     materialLockView.setDisplayMode(MaterialLockView.DisplayMode.Wrong);
                     materialLockView.clearPattern();
-
                 } else {
-
                     materialLockView.setDisplayMode(MaterialLockView.DisplayMode.Correct);
                     finish();
-
                 }
                 super.onPatternDetected(pattern, SimplePattern);
             }
@@ -49,23 +48,24 @@ public class Pattern extends AppCompatActivity {
                 materialLockView.setInStealthMode(isChecked);
             }
         });
-
-        ((EditText) findViewById(R.id.correct_pattern_edittext)).addTextChangedListener(new TextWatcher() {
+        final TextView tv = (TextView) findViewById(R.id.correct_pattern_edittext);
+        tv.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                CorrectPattern = "" + s;
+                CorrectPattern = tv.getText().toString();
             }
-
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
+        tv.setText(key[ran]);
+    }
+    public static int randomRange(int n1, int n2) {
+        return (int) (Math.random() * (n2 - n1 + 1)) + n1;
     }
 
 }
