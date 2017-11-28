@@ -100,6 +100,15 @@ public class MainActivity extends Activity {
                 startActivity(i);
             }
         });
+
+        Button block = (Button)findViewById(R.id.Blocking);
+        block.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, Block.class);
+                startActivity(i);
+            }
+        });
     }
     public void countDownTimer(){
         countDownTimer = new CountDownTimer(MILLISINFUTURE, COUNT_DOWN_INTERVAL) {

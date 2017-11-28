@@ -17,6 +17,19 @@
             </intent-filter>
         </activity>
         <service
+            android:name=".WindowChangeDetectingService"
+            android:exported="true"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" >
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".BlockService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
+        <service
             android:name=".SentSmsLogger"
             android:exported="false" >
             <intent-filter>
@@ -30,6 +43,7 @@
         <activity android:name=".Test" />
         <activity android:name=".Pattern" />
         <activity android:name=".SMSmain" />
+        <activity android:name=".Block" />
     </application>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.INTERNET"/>
