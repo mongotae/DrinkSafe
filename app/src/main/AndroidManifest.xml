@@ -16,14 +16,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service
+            android:name=".SentSmsLogger"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.example.drinksafe.SentSmsLogger" />
+            </intent-filter>
+        </service>
         <activity android:name=".MainActivity" />
         <activity android:name=".Voice" />
         <activity android:name=".GuardianList" />
         <activity android:name=".BlockingAppList" />
         <activity android:name=".Test" />
         <activity android:name=".Pattern" />
+        <activity android:name=".SMSmain" />
     </application>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.WRITE_SMS"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 </manifest>

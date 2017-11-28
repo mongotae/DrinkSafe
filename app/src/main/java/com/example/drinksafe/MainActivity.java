@@ -1,7 +1,9 @@
 package com.example.drinksafe;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.ContextMenu;
@@ -13,6 +15,10 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 
 public class MainActivity extends Activity {
     final int CONTEXT_MENU_VIEW = 1;
@@ -20,7 +26,9 @@ public class MainActivity extends Activity {
     ProgressBar progressBar;
     private static final int MILLISINFUTURE = 11*1000;
     private static final int COUNT_DOWN_INTERVAL = 1000;
-
+    public static long[] check = null;
+    public static String phone = "";
+    public static String[] nameList;
     private int count = 10;
     private TextView countTxt ;
     private CountDownTimer countDownTimer;
@@ -32,7 +40,17 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        SharedPreferences preferences = this.getSharedPreferences("check",0);
+        int size = preferences.getInt("check_size",0);
+        check = new long[size];
+        for (int i =0; i<size; i++){
+            check[i]=preferences.getLong("check_"+i, 0);
+        }
+        phone = preferences.getString("phone",null);
+//
+//        if(savedInstanceState!=null){
+//                check=savedInstanceState.getLongArray("checked");
+//        }
         Button lock = (Button)findViewById(R.id.lock);
         lock.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +85,17 @@ public class MainActivity extends Activity {
                 openContextMenu(setting);
             }
         });
+
+        Button sms = (Button)findViewById(R.id.sms);
+        sms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, SMSmain.class);
+
+                i.putExtra("phone", phone);
+                startActivity(i);
+            }
+        });
     }
     public void countDownTimer(){
         countDownTimer = new CountDownTimer(MILLISINFUTURE, COUNT_DOWN_INTERVAL) {
@@ -96,6 +125,15 @@ public class MainActivity extends Activity {
             countDownTimer.cancel();
         } catch (Exception e) {}
         countDownTimer=null;
+
+        SharedPreferences preferences = this.getSharedPreferences("check",0);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("check_size", check.length);
+        for(int i=0;i<check.length;i++){
+            editor.putLong("check_"+i,check[i]);
+        }
+        editor.putString("phone",phone);
+        editor.commit();
     }
     public void onCreateContextMenu (ContextMenu menu, View
             v, ContextMenu.ContextMenuInfo menuInfo){
@@ -120,5 +158,13 @@ public class MainActivity extends Activity {
         }
 
         return super.onContextItemSelected(item);
+    }
+    protected void onSaveInstanceState(Bundle outState){
+        outState.putLongArray("checked",check);
+        super.onSaveInstanceState(outState);
+    }
+    public void onRestoreInstanceState(Bundle savedInstanceState){
+        super.onRestoreInstanceState(savedInstanceState);
+        check=savedInstanceState.getLongArray("checked");
     }
 }

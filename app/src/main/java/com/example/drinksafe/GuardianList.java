@@ -4,32 +4,20 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by MoonKyuTae on 2017-11-24.
@@ -37,7 +25,9 @@ import java.util.List;
 
 public class GuardianList extends ListActivity {
         String tag = "cap";
-        String [] name, new_name;
+        String [] name;
+        public static String[] new_name;
+        String phone;
         int count = 0;
         ListView listView;
 
@@ -90,20 +80,44 @@ public class GuardianList extends ListActivity {
                                 new_name));
                         listView = getListView();         // 리스트뷰
                         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);  // 반드시 설정해줘야 멀티초이스
+                        if(MainActivity.check!=null) {
+                                for (int i = 0; i < MainActivity.check.length; i++) {
+                                        listView.setItemChecked((int) MainActivity.check[i], true);
+                                }
+                        }
                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        String mes = "";
-                                        long num[] = listView.getCheckItemIds();  // 현재 체크된 id들의 배열 리턴
-                                        // 화면표시 - 여기서 얻어온 값들 처리하심됨
-                                        mes = "Selected Item : \n";
-                                        for (int i = 0; i < num.length; i++) {
-                                                mes += i + " : " + name[(int) num[i]];
-                                                mes += "\n";
+                                        long num[] = listView.getCheckItemIds();  // 현재 체크된 id들의 배열 리
+                                        MainActivity.check= num;
+                                    if(num.length>1){
+                                        for(int k =0; k<=num.length-2;k++){
+                                            phone = ""+"+82"+name[(int) num[k]].split("\n")[1].substring(1)+",";
                                         }
+                                        phone=phone+"+82"+name[(int) num[num.length-1]].split("\n")[1].substring(1);
+                                    }else{
+                                        phone="+82"+name[(int) num[0]].split("\n")[1].substring(1);
+                                    }
+                                        MainActivity.phone=phone;
+                                        // 화면표시 - 여기서 얻어온 값들 처리하심됨
+//                                        mes = "Selected Item : \n";
+//                                        for (int i = 0; i < num.length; i++) {
+//                                                mes += i + " : " + name[(int) num[i]];
+//                                                mes += "\n";
+//                                        }
                                 }
                         });
+
+
                 }
         }
+//        public void onResume(){
+//                super.onResume();
+//                if(MainActivity.check!=null) {
+//                        for (int i = 0; i < MainActivity.check.length; i++) {
+//                                listView.setItemChecked((int) MainActivity.check[i], true);
+//                        }
+//                }
+//        }
         public void onRequestPermissionResult(int requestCode,String permission[], int[] grantResults) {
                 if (requestCode == 123) {
                         Cursor cursor = getURI();  // 전화번호부 가져오기
@@ -135,16 +149,33 @@ public class GuardianList extends ListActivity {
                                 new_name));
                         listView = getListView();         // 리스트뷰
                         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);  // 반드시 설정해줘야 멀티초이스
+                        if(MainActivity.check!=null) {
+                                for (int i = 0; i < MainActivity.check.length; i++) {
+                                        listView.setItemChecked((int) MainActivity.check[i], true);
+                                }
+                        }
                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        String mes = "";
-                                        long num[] = listView.getCheckItemIds();  // 현재 체크된 id들의 배열 리턴
-                                        // 화면표시 - 여기서 얻어온 값들 처리하심됨
-                                        mes = "Selected Item : \n";
-                                        for (int i = 0; i < num.length; i++) {
-                                                mes += i + " : " + name[(int) num[i]];
-                                                mes += "\n";
+//                                        String mes = "";
+                                        long num[] = listView.getCheckItemIds();
+                                        MainActivity.check= num;
+                                    if(num.length>1){
+                                        for(int k =0; k<=num.length-2;k++){
+                                            phone = ""+"+82"+name[(int) num[k]].split("\n")[1].substring(1)+",";
                                         }
+                                        phone=phone+"+82"+name[(int) num[num.length-1]].split("\n")[1].substring(1);
+                                    }else{
+                                        phone="+82"+name[(int) num[0]].split("\n")[1].substring(1);
+                                    }
+
+                                    MainActivity.phone=phone;
+                                        // 현재 체크된 id들의 배열 리턴
+                                        // 화면표시 - 여기서 얻어온 값들 처리하심됨
+//                                        mes = "Selected Item : \n";
+//                                        for (int i = 0; i < num.length; i++) {
+//                                                mes += i + " : " + name[(int) num[i]];
+//                                                mes += "\n";
+//                                        }
                                 }
                         });
                 }
