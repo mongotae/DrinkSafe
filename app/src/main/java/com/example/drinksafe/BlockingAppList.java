@@ -20,11 +20,25 @@ import java.util.List;
  */
 
 public class BlockingAppList extends Activity{
+    static ArrayList<String> packageNm;
+    static ArrayList<String> selectedPackage;
+    static ArrayList<Integer> selectedPackageIndex;
+    public static Activity activity = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.blocking_apps_list);
-
+        activity=this;
+        if(MainActivity.checkedAppList!=null){
+            selectedPackage=MainActivity.checkedAppList;
+        }else{
+            selectedPackage = new ArrayList<>();
+        }
+        if(MainActivity.checkedAppIndexList!=null){
+            selectedPackageIndex=MainActivity.checkedAppIndexList;
+        }else{
+            selectedPackageIndex= new ArrayList<>();
+        }
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
                     .replace(R.id.container, new PlaceholderFragment()).commit();
@@ -49,12 +63,13 @@ public class BlockingAppList extends Activity{
             pInfo.addAll(pm.getInstalledPackages(0));
             final AppInfo[] app_info = new AppInfo[pInfo.size()];
             int counter = 0;
-
+            packageNm = new ArrayList<String>();
             for(PackageInfo item: pInfo){
                 try{
                     applicationInfo = pm.getApplicationInfo(item.packageName, 1);
                     app_info[counter] = new AppInfo(pm.getApplicationIcon(applicationInfo),
                             String.valueOf(pm.getApplicationLabel(applicationInfo)));
+                    packageNm.add(applicationInfo.processName);
                 }
                 catch(Exception e){
                     e.printStackTrace();
@@ -65,6 +80,11 @@ public class BlockingAppList extends Activity{
             ListView listApplication = (ListView)rootView.findViewById(R.id.listView1);
             final AppInfoAdapter adapter = new AppInfoAdapter(getActivity(), app_info);
             listApplication.setAdapter(adapter);
+            if(selectedPackage!=null){
+            for(int i = 0; i<selectedPackage.size();i++){
+                adapter.setChecked(selectedPackageIndex.get(i), true);
+                }
+            }
             Button b = (Button)rootView.findViewById(R.id.select);
             b.setOnClickListener(new View.OnClickListener()
             {
@@ -76,11 +96,15 @@ public class BlockingAppList extends Activity{
                     {
                         if(adapter.mCheckStates.get(i)==true)
                         {
-                            result.append(app_info[i].applicationName);
-                            result.append("\n");
+                            selectedPackage.add(packageNm.get(i));
+                            selectedPackageIndex.add(i);
                         }
                     }
-                    Toast.makeText(getActivity(), result, 1000).show();
+                    MainActivity.checkedAppList = selectedPackage;
+                    MainActivity.checkedAppIndexList=selectedPackageIndex;
+                    try {
+                        BlockingAppList.activity.finish();
+                    } catch (Exception ignored) {}
                 }
             });
             return rootView;

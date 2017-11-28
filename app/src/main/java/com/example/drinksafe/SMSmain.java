@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -63,10 +62,6 @@ public class SMSmain extends Activity {
             double altitude = location.getAltitude();
             float accuracy = location.getAccuracy();
             String provider = location.getProvider();
-            //Gps 위치제공자에 의한 위치변화. 오차범위가 좁다.
-            //Network 위치제공자에 의한 위치변화
-            //Network 위치는 Gps에 비해 정확도가 많이 떨어진다.
-
             str=latitude+","+longitude;
             MESSAGE = MESSAGE+str;
         }
@@ -97,9 +92,6 @@ public class SMSmain extends Activity {
                             case Activity.RESULT_OK:
                                 Toast.makeText(getBaseContext(), "SMS sent",
                                         Toast.LENGTH_LONG).show();
-                                // When sms sent successfully, start service to
-                                // insert sent message
-
                                 Intent intent = new Intent(
                                         "com.example.drinksafe.SentSmsLogger");
                                 intent.putExtra(Constants.KEY_PHONE_NUMBER,
@@ -135,7 +127,6 @@ public class SMSmain extends Activity {
                             null);
                 }
 
-
             } catch (Exception e) {
                 Toast.makeText(this,
                         e.getMessage() + "!\n" + "Failed to send SMS",
@@ -147,49 +138,27 @@ public class SMSmain extends Activity {
                     Toast.LENGTH_LONG).show();
         }
     }
-
-    /**
-     * @return true if SIM card exists false if SIM card is locked or doesn't
-     *         exists <br/>
-     * <br/>
-     *         <b>Note:</b> This method requires permissions <b>
-     *         "android.permission.READ_PHONE_STATE" </b>
-     */
     private boolean isSimExists() {
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         SIM_STATE = telephonyManager.getSimState();
 
         if (SIM_STATE == TelephonyManager.SIM_STATE_READY)
             return true;
-
         return false;
     }
-
-    /**
-     * Get simcard state
-     *
-     * @return
-     */
     private String getSimState() {
         switch (SIM_STATE) {
-            case TelephonyManager.SIM_STATE_ABSENT: // SimState =
-                return "No Sim Found!"; // "No Sim Found!";
-            case TelephonyManager.SIM_STATE_NETWORK_LOCKED: // SimState =
-                // "Network Locked!";
+            case TelephonyManager.SIM_STATE_ABSENT:
+                return "No Sim Found!";
+            case TelephonyManager.SIM_STATE_NETWORK_LOCKED:
                 return "Network Locked!";
-            case TelephonyManager.SIM_STATE_PIN_REQUIRED: // SimState =
-                // "PIN Required to access SIM!";
+            case TelephonyManager.SIM_STATE_PIN_REQUIRED:
                 return "PIN Required to access SIM!";
-            case TelephonyManager.SIM_STATE_PUK_REQUIRED: // SimState =
-                // "PUK Required to access SIM!";
-                // // Personal
-                // Unblocking Code
+            case TelephonyManager.SIM_STATE_PUK_REQUIRED:
                 return "PUK Required to access SIM!";
-            case TelephonyManager.SIM_STATE_UNKNOWN: // SimState =
-                // "Unknown SIM State!";
+            case TelephonyManager.SIM_STATE_UNKNOWN:
                 return "Unknown SIM State!";
         }
         return null;
     }
-
 }

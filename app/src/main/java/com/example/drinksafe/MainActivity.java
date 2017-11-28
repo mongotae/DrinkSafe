@@ -1,7 +1,6 @@
 package com.example.drinksafe;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,10 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
+import java.util.ArrayList;
 
 public class MainActivity extends Activity {
     final int CONTEXT_MENU_VIEW = 1;
@@ -32,6 +28,8 @@ public class MainActivity extends Activity {
     private int count = 10;
     private TextView countTxt ;
     private CountDownTimer countDownTimer;
+    public static ArrayList<String> checkedAppList;
+    public static ArrayList<Integer> checkedAppIndexList;
 
     String Str;
     int hour,minute,second;
@@ -41,16 +39,23 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         SharedPreferences preferences = this.getSharedPreferences("check",0);
+
         int size = preferences.getInt("check_size",0);
         check = new long[size];
         for (int i =0; i<size; i++){
             check[i]=preferences.getLong("check_"+i, 0);
         }
+
         phone = preferences.getString("phone",null);
-//
-//        if(savedInstanceState!=null){
-//                check=savedInstanceState.getLongArray("checked");
-//        }
+
+        int appSize = preferences.getInt("app_size", 0);
+        checkedAppIndexList = new ArrayList<>();
+        checkedAppList = new ArrayList<>();
+        for (int i = 0; i < appSize; i++) {
+            checkedAppList.add(preferences.getString("appName_" + i, null));
+            checkedAppIndexList.add(preferences.getInt("appIndex_" + i, 0));
+        }
+
         Button lock = (Button)findViewById(R.id.lock);
         lock.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,10 +63,9 @@ public class MainActivity extends Activity {
                 progressBar = (ProgressBar)findViewById(R.id.progressBar);
                 switch (v.getId()) {
                     case R.id.lock:
-                        progressBar.setVisibility(View.VISIBLE);       // 버튼 클릭시 원진행 바가 보이게 함
+                        progressBar.setVisibility(View.VISIBLE);
                         break;
                 }
-                //타이머 실행
                 countTxt = (TextView)findViewById(R.id.count_txt);
                 countDownTimer();
                 countDownTimer.start();
@@ -102,7 +106,7 @@ public class MainActivity extends Activity {
             public void onTick(long millisUntilFinished) {
                 count --;
                 sum();
-                Str = String.format("%02d시간 %02d분 %02d초",hour,minute,second);
+                Str = String.format("%02d: %02d: %02d",hour,minute,second);
                 countTxt.setText(Str);
 
             }
@@ -128,16 +132,25 @@ public class MainActivity extends Activity {
 
         SharedPreferences preferences = this.getSharedPreferences("check",0);
         SharedPreferences.Editor editor = preferences.edit();
+
         editor.putInt("check_size", check.length);
         for(int i=0;i<check.length;i++){
             editor.putLong("check_"+i,check[i]);
         }
+
         editor.putString("phone",phone);
+
+        editor.putInt("app_size", checkedAppList.size());
+
+        for(int i=0;i<checkedAppIndexList.size();i++){
+            editor.putString("appName_"+i,checkedAppList.get(i));
+            editor.putInt("appIndex_"+i,checkedAppIndexList.get(i));
+        }
+
         editor.commit();
     }
     public void onCreateContextMenu (ContextMenu menu, View
             v, ContextMenu.ContextMenuInfo menuInfo){
-        //Context menu
         menu.setHeaderTitle("Setting");
         menu.add(Menu.NONE, CONTEXT_MENU_VIEW, Menu.NONE, "Guardians List");
         menu.add(Menu.NONE, CONTEXT_MENU_EDIT, Menu.NONE, "Blocking Apps List");
@@ -156,7 +169,6 @@ public class MainActivity extends Activity {
             }
             break;
         }
-
         return super.onContextItemSelected(item);
     }
     protected void onSaveInstanceState(Bundle outState){
