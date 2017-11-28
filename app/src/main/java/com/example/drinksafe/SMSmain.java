@@ -63,7 +63,6 @@ public class SMSmain extends Activity {
             e.printStackTrace();
         }
         sendSMS();
-        finish();
     } // end of onCreate
     protected void onDestroy(){
         super.onDestroy();
@@ -171,7 +170,7 @@ public class SMSmain extends Activity {
             Toast.makeText(this, getSimState() + " " + "Cannot send SMS",
                     Toast.LENGTH_LONG).show();
         }
-        onDestroy();
+        finish();
     }
 
     /**
