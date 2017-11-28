@@ -89,9 +89,10 @@ public class GuardianList extends ListActivity {
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                         long num[] = listView.getCheckItemIds();  // 현재 체크된 id들의 배열 리
                                         MainActivity.check= num;
+                                    phone="";
                                     if(num.length>1){
                                         for(int k =0; k<=num.length-2;k++){
-                                            phone = ""+"+82"+name[(int) num[k]].split("\n")[1].substring(1)+",";
+                                            phone = phone+"+82"+name[(int) num[k]].split("\n")[1].substring(1)+",";
                                         }
                                         phone=phone+"+82"+name[(int) num[num.length-1]].split("\n")[1].substring(1);
                                     }else{
@@ -163,7 +164,7 @@ public class GuardianList extends ListActivity {
                                         for(int k =0; k<=num.length-2;k++){
                                             phone = ""+"+82"+name[(int) num[k]].split("\n")[1].substring(1)+",";
                                         }
-                                        phone=phone+"+82"+name[(int) num[num.length-1]].split("\n")[1].substring(1);
+                                        phone = phone+"+82"+name[(int) num[num.length-1]].split("\n")[1].substring(1);
                                     }else{
                                         phone="+82"+name[(int) num[0]].split("\n")[1].substring(1);
                                     }
