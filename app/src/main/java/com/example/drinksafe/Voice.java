@@ -19,6 +19,10 @@ import java.util.ArrayList;
 
 public class Voice extends Activity{
     protected static final int RESULT_SPEECH = 1;
+    private int count=0;
+    private int count2=0;
+    private boolean passFlag = false;
+    MainActivity mc;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +32,14 @@ public class Voice extends Activity{
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                count++;
+                if(count>5){
+                    Intent i = new Intent("com.example.drinksafe.SMSmain");
+                    i.putExtra("phone", mc.phone);
+                    i.setPackage("com.example.drinksafe");
+                    startService(i);
+                    finish();
+                }
                 Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
                 i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
                 startActivityForResult(i, RESULT_SPEECH);
@@ -46,6 +58,7 @@ public class Voice extends Activity{
                             .setMessage("Voice Recognition Success(Result is " + text.get(0) + ")")
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
+                                    passFlag=true;
                                     Intent i = new Intent(Voice.this, Pattern.class);
                                     startActivity(i);
                                     finish();
@@ -53,6 +66,7 @@ public class Voice extends Activity{
                             })
                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
+                                    passFlag=true;
                                     Intent i = new Intent(Voice.this, Pattern.class);
                                     startActivity(i);
                                     finish();
@@ -63,19 +77,25 @@ public class Voice extends Activity{
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("Result")
-                            .setMessage("Voice Recognition Fail(Result is " + text.get(0) + ")")
+                            .setMessage("Voice Recognition Fail(Result is " + text.get(0) + ")\nYou failed" + count + "times.\nOnly "+(5-count)+"times left.")
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    finish();
                                 }
                             })
                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    finish();
+
                                 }
                             })
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
+                    if(count>=5){
+                        Intent i = new Intent("com.example.drinksafe.SMSmain");
+                        i.putExtra("phone", mc.phone);
+                        i.setPackage("com.example.drinksafe");
+                        startService(i);
+                        finish();
+                    }
                 }
                 break;
             }
@@ -83,7 +103,17 @@ public class Voice extends Activity{
         }
         }catch (NullPointerException e){
             Toast.makeText(this, "Do not disturb recognition. Retry!", Toast.LENGTH_SHORT).show();
-            finish();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(passFlag==false){
+            Intent i = new Intent("com.example.drinksafe.SMSmain");
+            i.putExtra("phone", mc.phone);
+            i.setPackage("com.example.drinksafe");
+            startService(i);
         }
     }
 }

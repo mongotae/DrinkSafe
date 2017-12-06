@@ -16,20 +16,24 @@ import java.util.ArrayList;
  */
 public class WindowChangeDetectingService extends AccessibilityService {
     MainActivity mc;
-    final static String TAG = "WindowChangeDetectingService";
-    static String lastPacakge = "";
-    static final String ACTION_BLOCK = "WindowChangeDetectingService.ACTION_BLOCK";
+
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        ArrayList<String> applist = new ArrayList<>();
-        applist=mc.checkedAppList;
-        if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-            for(String app : applist) {
-                if (app.equals(event.getPackageName())) {
-                    gotoHome();
-                }break;
+        if(mc.flag==true && mc.checkedAppList!=null) {
+            ArrayList<String> applist = new ArrayList<>();
+            applist = mc.checkedAppList;
+            if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED && applist != null) {
+                for (String app : applist) {
+                    if (app.equals(event.getPackageName())) {
+                        gotoHome();
+                    }
+                    break;
+                }
             }
         }
+//        if(mc.flag==false){
+//            disableSelf();
+//        }
     }
 
     private void gotoHome() {
@@ -46,13 +50,6 @@ public class WindowChangeDetectingService extends AccessibilityService {
     @Override
     public void onInterrupt() {
 
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        if(ACTION_BLOCK.equals(intent.getAction())) {
-        }
-        return super.onStartCommand(intent, flags, startId);
     }
 }
 

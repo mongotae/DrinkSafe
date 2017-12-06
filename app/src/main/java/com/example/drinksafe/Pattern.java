@@ -1,5 +1,6 @@
 package com.example.drinksafe;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -18,7 +19,8 @@ public class Pattern extends AppCompatActivity {
     private MaterialLockView materialLockView;
     private String[] key = {"1234", "4567", "123", "4589", "4753"};
     private int ran;
-
+    private boolean passFlag = false;
+    MainActivity mc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,10 +32,21 @@ public class Pattern extends AppCompatActivity {
             public void onPatternDetected(List<MaterialLockView.Cell> pattern, String SimplePattern) {
                 Log.e("SimplePattern", SimplePattern);
                 if (!SimplePattern.equals(CorrectPattern)) {
-                    materialLockView.setDisplayMode(MaterialLockView.DisplayMode.Wrong);
-                    materialLockView.clearPattern();
+//                    materialLockView.setDisplayMode(MaterialLockView.DisplayMode.Wrong);
+//                    materialLockView.clearPattern();
+                    Intent i = new Intent("com.example.drinksafe.SMSmain");
+                    i.putExtra("phone", mc.phone);
+                    i.setPackage("com.example.drinksafe");
+                    startService(i);
+                    Intent intent = new Intent(Pattern.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
                 } else {
                     materialLockView.setDisplayMode(MaterialLockView.DisplayMode.Correct);
+                    mc.flag=false;
+                    passFlag=true;
+                    Intent intent = new Intent(Pattern.this, MainActivity.class);
+                    startActivity(intent);
                     finish();
                 }
                 super.onPatternDetected(pattern, SimplePattern);
@@ -67,4 +80,14 @@ public class Pattern extends AppCompatActivity {
         return (int) (Math.random() * (n2 - n1 + 1)) + n1;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(passFlag==false){
+            Intent i = new Intent("com.example.drinksafe.SMSmain");
+            i.putExtra("phone", mc.phone);
+            i.setPackage("com.example.drinksafe");
+            startService(i);
+        }
+    }
 }

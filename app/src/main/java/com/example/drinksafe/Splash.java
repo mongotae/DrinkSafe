@@ -52,7 +52,8 @@ public class Splash extends Activity {
         int permissionSendMessage = ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS);
         int permissionRecordAudio = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
         int permissionPhoneCall = ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE);
-        int permissionLocation = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        int permissionFineLocation = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        int permissionCoarseLocation = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
         List<String> listPermissionsNeeded = new ArrayList<>();
         if (permissionReadContacts != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.READ_CONTACTS);
@@ -63,11 +64,14 @@ public class Splash extends Activity {
         if (permissionRecordAudio != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.RECORD_AUDIO);
         }
-        if (permissionLocation != PackageManager.PERMISSION_GRANTED) {
+        if (permissionFineLocation != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION);
         }
         if (permissionPhoneCall != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.CALL_PHONE);
+        }
+        if (permissionCoarseLocation != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.ACCESS_COARSE_LOCATION);
         }
         if (!listPermissionsNeeded.isEmpty()) {
             ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]),REQUEST_ID_MULTIPLE_PERMISSIONS);
@@ -101,6 +105,11 @@ public class Splash extends Activity {
 
                         }
                     } else if (permissions[i].equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                        if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                            Log.e("msg", "location granted");
+
+                        }
+                    }else if (permissions[i].equals(Manifest.permission.ACCESS_COARSE_LOCATION)) {
                         if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                             Log.e("msg", "location granted");
 

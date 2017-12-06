@@ -9,15 +9,11 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
-import java.util.ArrayList;
 
 /**
  * Created by MoonKyuTae on 2017-11-24.
@@ -46,7 +42,6 @@ public class GuardianList extends ListActivity {
                     do {
                             if (!cursor.getString(2).startsWith("01"))
                                     continue;
-                            // 요소값 얻기
                             name[count] = cursor.getString(1);
                             name[count] += "\n";
                             name[count] += cursor.getString(2);
@@ -69,17 +64,19 @@ public class GuardianList extends ListActivity {
             }
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            long num[] = listView.getCheckItemIds();
-                            MainActivity.check= num;
-                        phone="";
-                        if(num.length>1){
-                            for(int k =0; k<=num.length-2;k++){
-                                phone = phone+"+82"+name[(int) num[k]].split("\n")[1].substring(1)+",";
+                        long num[] = listView.getCheckItemIds();
+                        MainActivity.check = num;
+                        phone = "";
+                        if (num.length > 0){
+                            if (num.length > 1) {
+                                for (int k = 0; k <= num.length - 2; k++) {
+                                    phone = phone + "+82" + name[(int) num[k]].split("\n")[1].substring(1) + ",";
+                                }
+                                phone = phone + "+82" + name[(int) num[num.length - 1]].split("\n")[1].substring(1);
+                            } else {
+                                phone = "+82" + name[(int) num[0]].split("\n")[1].substring(1);
                             }
-                            phone=phone+"+82"+name[(int) num[num.length-1]].split("\n")[1].substring(1);
-                        }else{
-                            phone="+82"+name[(int) num[0]].split("\n")[1].substring(1);
-                        }
+                    }
                             MainActivity.phone=phone;
                     }
             });

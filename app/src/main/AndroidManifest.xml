@@ -18,16 +18,21 @@
         </activity>
         <service
             android:name=".WindowChangeDetectingService"
-            android:exported="true"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" >
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibilityservice"/>
+
         </service>
         <service
-            android:name=".BlockService"
-            android:enabled="true"
-            android:exported="true" >
+            android:name=".SMSmain"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.example.drinksafe.SMSmain" />
+            </intent-filter>
         </service>
         <service
             android:name=".SentSmsLogger"
@@ -40,10 +45,7 @@
         <activity android:name=".Voice" />
         <activity android:name=".GuardianList" />
         <activity android:name=".BlockingAppList" />
-        <activity android:name=".Test" />
         <activity android:name=".Pattern" />
-        <activity android:name=".SMSmain" />
-        <activity android:name=".Block" />
     </application>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.INTERNET"/>

@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 public class AppInfoAdapter extends ArrayAdapter<AppInfo> implements CompoundButton.OnCheckedChangeListener
 {  SparseBooleanArray mCheckStates;
-
     Context context;
     AppInfo  data[] = null;
     LayoutInflater mInflater;
@@ -32,19 +31,15 @@ public class AppInfoAdapter extends ArrayAdapter<AppInfo> implements CompoundBut
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
-
         View row = convertView;
         AppInfoHolder holder= null;
 
         if (row == null){
             row = mInflater.inflate(R.layout.list_item, parent, false);
-
             holder = new AppInfoHolder();
-
             holder.imgIcon = (ImageView) row.findViewById(R.id.imageView1);
             holder.txtTitle = (TextView) row.findViewById(R.id.textView1);
             holder.chkSelect = (CheckBox) row.findViewById(R.id.checkBox1);
-
             row.setTag(holder);
         }
         else{
@@ -54,7 +49,6 @@ public class AppInfoAdapter extends ArrayAdapter<AppInfo> implements CompoundBut
         AppInfo appinfo = data[position];
         holder.txtTitle.setText(appinfo.applicationName);
         holder.imgIcon.setImageDrawable(appinfo.icon);
-        // holder.chkSelect.setChecked(true);
         holder.chkSelect.setTag(position);
         holder.chkSelect.setChecked(mCheckStates.get(position, false));
         holder.chkSelect.setOnCheckedChangeListener(this);
