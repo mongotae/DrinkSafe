@@ -1,7 +1,7 @@
 package com.example.drinksafe;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,12 +9,10 @@ import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-
 import com.amnix.materiallockview.MaterialLockView;
-
 import java.util.List;
 
-public class Pattern extends AppCompatActivity {
+public class Pattern extends Activity {
     private String CorrectPattern = "123";
     private MaterialLockView materialLockView;
     private String[] key = {"16748", "248651", "321478965", "47852369", "51832496","67485923", "748596321", "87692451","94381672"};
@@ -34,14 +32,13 @@ public class Pattern extends AppCompatActivity {
             public void onPatternDetected(List<MaterialLockView.Cell> pattern, String SimplePattern) {
                 Log.e("SimplePattern", SimplePattern);
                 if (!SimplePattern.equals(CorrectPattern)) {
-//                    materialLockView.setDisplayMode(MaterialLockView.DisplayMode.Wrong);
-//                    materialLockView.clearPattern();
                     Intent i = new Intent("com.example.drinksafe.SMSmain");
                     i.putExtra("phone", mc.phone);
                     i.setPackage("com.example.drinksafe");
                     startService(i);
                     Intent intent = new Intent(Pattern.this, MainActivity.class);
                     startActivity(intent);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 } else {
                     materialLockView.setDisplayMode(MaterialLockView.DisplayMode.Correct);
@@ -52,6 +49,7 @@ public class Pattern extends AppCompatActivity {
                     MainActivity.lock.setEnabled(true);
                     MainActivity.unlock.setEnabled(false);
                     startActivity(intent);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
                 super.onPatternDetected(pattern, SimplePattern);
@@ -65,6 +63,7 @@ public class Pattern extends AppCompatActivity {
                 materialLockView.setInStealthMode(isChecked);
             }
         });
+
         final TextView tv = (TextView) findViewById(R.id.correct_pattern_edittext);
         tv.addTextChangedListener(new TextWatcher() {
             @Override
@@ -79,6 +78,7 @@ public class Pattern extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
             }
         });
+
         tv.setText(key[ran]);
         patternCheckThread = new Thread() {
             @Override
@@ -93,6 +93,7 @@ public class Pattern extends AppCompatActivity {
         };
         patternCheckThread.start();
     }
+
     public static int randomRange(int n1, int n2) {
         return (int) (Math.random() * (n2 - n1 + 1)) + n1;
     }

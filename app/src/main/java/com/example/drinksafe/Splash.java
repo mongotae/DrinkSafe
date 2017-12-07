@@ -116,7 +116,6 @@ public class Splash extends Activity {
                         }
                     }
                 }
-
             }
             Thread welcomeThread = new Thread() {
 
@@ -135,7 +134,6 @@ public class Splash extends Activity {
                 }
             };
             welcomeThread.start();
-
         }
     }
 }

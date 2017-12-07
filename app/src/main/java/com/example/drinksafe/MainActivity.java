@@ -7,7 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.AudioAttributes;
+import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -24,12 +24,8 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.gson.Gson;
-
 import java.util.ArrayList;
-
-import static java.lang.Thread.sleep;
 
 public class MainActivity extends Activity {
     final int CONTEXT_MENU_VIEW = 1;
@@ -66,23 +62,20 @@ public class MainActivity extends Activity {
                 .setContentIntent(contentIntent)
                 .setAutoCancel(false);
         Notification notification = builder.getNotification();
-
         notification.flags |= Notification.FLAG_NO_CLEAR
                 | Notification.FLAG_ONGOING_EVENT;
-
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(1, notification);
     }
-    public Button getLock(){
-        return lock;
-    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         loadSharedPreferences();
-
+        Typeface tf = Typeface.createFromAsset(getAssets(),"digital-7.ttf");
         if(countTxt==null) countTxt = (TextView)findViewById(R.id.count_txt);
+        countTxt.setTypeface(tf);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
 
         lock = (Button)findViewById(R.id.lock);
@@ -107,6 +100,7 @@ public class MainActivity extends Activity {
                 startActivityForResult(intent, 0);
             }
         });
+
         unlock = (Button)findViewById(R.id.unlock);
         unlock.setEnabled(false);
         unlock.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +111,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        final ImageButton setting = (ImageButton)findViewById(R.id.setting);
+        final Button setting = (Button)findViewById(R.id.setting);
         setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,17 +120,15 @@ public class MainActivity extends Activity {
             }
         });
     }
+
     public void loadSharedPreferences(){
         SharedPreferences preferences = this.getSharedPreferences("check",0);
-
         int size = preferences.getInt("check_size",0);
         check = new long[size];
         for (int i =0; i<size; i++){
             check[i]=preferences.getLong("check_"+i, 0);
         }
-
         phone = preferences.getString("phone",null);
-
         int appSize = preferences.getInt("app_size", 0);
         checkedAppIndexList = new ArrayList<>();
         checkedAppList = new ArrayList<>();
@@ -148,6 +140,7 @@ public class MainActivity extends Activity {
         String json = preferences.getString("MyObject", "");
         countDownTimer = gson.fromJson(json, CountDownTimer.class);
     }
+
     public void countDownTimer(){
         countDownTimer = new CountDownTimer(MILLISINFUTURE, COUNT_DOWN_INTERVAL) {
             public void onTick(long millisUntilFinished) {
@@ -161,6 +154,7 @@ public class MainActivity extends Activity {
                 progressBar.setVisibility(View.INVISIBLE);
                 Intent intent = new Intent(MainActivity.this, Voice.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 try {
                     final Vibrator vibrator= (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
                     long[] pattern = {100,300,100,700,300,2000};
@@ -176,6 +170,7 @@ public class MainActivity extends Activity {
             }
         };
     }
+
     public void sum(long millisUntilFinished){
         hour = (int) millisUntilFinished/3600/1000;
         minute = ((int) millisUntilFinished - hour*3600*1000)/60/1000;
@@ -184,64 +179,57 @@ public class MainActivity extends Activity {
 
     public void onDestroy() {
         super.onDestroy();
-//        try{
-//            countDownTimer.cancel();
-//        } catch (Exception e) {}
-//        countDownTimer=null;
-
         SharedPreferences preferences = this.getSharedPreferences("check",0);
         SharedPreferences.Editor editor = preferences.edit();
-
         editor.putInt("check_size", check.length);
         for(int i=0;i<check.length;i++){
             editor.putLong("check_"+i,check[i]);
         }
-
         editor.putString("phone",phone);
-
         editor.putInt("app_size", checkedAppList.size());
-
         for(int i=0;i<checkedAppIndexList.size();i++){
             editor.putString("appName_"+i,checkedAppList.get(i));
             editor.putInt("appIndex_"+i,checkedAppIndexList.get(i));
         }
-
         Gson gson = new Gson();
         String json = gson.toJson(countDownTimer);
         editor.putString("MyObject", json);
         editor.commit();
     }
+
     public void onCreateContextMenu (ContextMenu menu, View
             v, ContextMenu.ContextMenuInfo menuInfo){
         menu.setHeaderTitle("Setting");
         menu.add(Menu.NONE, CONTEXT_MENU_VIEW, Menu.NONE, "Guardians List");
         menu.add(Menu.NONE, CONTEXT_MENU_EDIT, Menu.NONE, "Blocking Apps List");
     }
+
     public boolean onContextItemSelected (MenuItem item){
         // TODO Auto-generated method stub
         switch (item.getItemId()) {
             case CONTEXT_MENU_VIEW: {
                 Intent intent = new Intent(MainActivity.this, GuardianList.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
             break;
             case CONTEXT_MENU_EDIT: {
                 Intent intent = new Intent(MainActivity.this, BlockingAppList.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
             break;
         }
         return super.onContextItemSelected(item);
     }
+
     protected void onSaveInstanceState(Bundle outState){
         outState.putLongArray("checked",check);
         super.onSaveInstanceState(outState);
     }
+
     public void onRestoreInstanceState(Bundle savedInstanceState){
         super.onRestoreInstanceState(savedInstanceState);
         check=savedInstanceState.getLongArray("checked");
-    }
-    public TextView getTextView(){
-        return countTxt;
     }
 }

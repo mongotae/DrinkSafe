@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Splash">
+        <activity android:name=".Splash"
+            android:theme="@android:style/Theme.Holo.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,11 +42,16 @@
                 <action android:name="com.example.drinksafe.SentSmsLogger" />
             </intent-filter>
         </service>
-        <activity android:name=".MainActivity" />
-        <activity android:name=".Voice" />
-        <activity android:name=".GuardianList" />
-        <activity android:name=".BlockingAppList" />
-        <activity android:name=".Pattern" />
+        <activity android:name=".MainActivity"
+            android:theme="@android:style/Theme.Holo.NoActionBar"/>
+        <activity android:name=".Voice"
+            android:theme="@android:style/Theme.Holo.NoActionBar"/>
+        <activity android:name=".GuardianList"
+            android:theme="@android:style/Theme.Holo.NoActionBar"/>
+        <activity android:name=".BlockingAppList"
+            android:theme="@android:style/Theme.Holo.NoActionBar"/>
+        <activity android:name=".Pattern"
+            android:theme="@android:style/Theme.Holo.NoActionBar"/>
     </application>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>

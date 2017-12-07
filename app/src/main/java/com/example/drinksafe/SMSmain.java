@@ -1,6 +1,5 @@
 package com.example.drinksafe;
 
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -51,23 +50,25 @@ public class SMSmain extends Service {
                     Toast.LENGTH_LONG).show();
             return;
         }
+        try {
+            Thread.sleep(3000);
         lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                 100,
                 1,
                 mLocationListener);
+            Thread.sleep(3000);
         lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
                 100,
                 1,
                 mLocationListener);
-        try {
-            Thread.sleep(10000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
             sendSMS();
         }
     }
+
     public void onDestroy(){
         super.onDestroy();
         lm.removeUpdates(mLocationListener);

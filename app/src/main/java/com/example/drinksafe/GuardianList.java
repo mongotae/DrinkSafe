@@ -1,10 +1,6 @@
 package com.example.drinksafe;
 
-import android.Manifest;
-import android.app.AlertDialog;
 import android.app.ListActivity;
-import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;

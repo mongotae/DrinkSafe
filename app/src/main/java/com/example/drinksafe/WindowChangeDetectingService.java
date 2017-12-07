@@ -3,17 +3,11 @@ package com.example.drinksafe;
 /**
  * Created by MoonKyuTae on 2017-11-28.
  */
-
 import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
-import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
-
 import java.util.ArrayList;
 
-/**
- * Created by 2nd_user on 2016-04-10.
- */
 public class WindowChangeDetectingService extends AccessibilityService {
     MainActivity mc;
 
@@ -31,9 +25,6 @@ public class WindowChangeDetectingService extends AccessibilityService {
                 }
             }
         }
-//        if(mc.flag==false){
-//            disableSelf();
-//        }
     }
 
     private void gotoHome() {

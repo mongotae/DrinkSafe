@@ -1,17 +1,15 @@
 package com.example.drinksafe;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
 import java.util.ArrayList;
-
 
 /**
  * Created by MoonKyuTae on 2017-11-24.
@@ -44,6 +42,7 @@ public class Voice extends Activity{
                 Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
                 i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, "en-US");
                 startActivityForResult(i, RESULT_SPEECH);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
 
@@ -60,6 +59,7 @@ public class Voice extends Activity{
         };
         voiceCheckThread.start();
     }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try{
@@ -67,7 +67,7 @@ public class Voice extends Activity{
             case RESULT_SPEECH: {
                 ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 if (text.get(0).equals("drink a lot") || text.get(0).equals("나 안 취했어")) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this,android.R.style.Theme_Holo_Dialog_NoActionBar);
                     builder.setTitle("Result")
                             .setMessage("Voice Recognition Success(Result is " + text.get(0) + ")")
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -75,6 +75,7 @@ public class Voice extends Activity{
                                     passFlag=true;
                                     Intent i = new Intent(Voice.this, Pattern.class);
                                     startActivity(i);
+                                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                     voiceCheckThread.interrupt();
                                     finish();
                                 }
@@ -84,13 +85,14 @@ public class Voice extends Activity{
                                     passFlag=true;
                                     Intent i = new Intent(Voice.this, Pattern.class);
                                     startActivity(i);
+                                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                                     finish();
                                 }
                             })
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
                 } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this,android.R.style.Theme_Holo_Dialog_NoActionBar);
                     builder.setTitle("Result")
                             .setMessage("Voice Recognition Fail(Result is " + text.get(0) + ")\nYou failed" + count + "times.\nOnly "+(5-count)+"times left.")
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -114,7 +116,6 @@ public class Voice extends Activity{
                 }
                 break;
             }
-
         }
         }catch (NullPointerException e){
             Toast.makeText(this, "Do not disturb recognition. Retry!", Toast.LENGTH_SHORT).show();
