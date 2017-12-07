@@ -39,12 +39,14 @@ public class MainActivity extends Activity {
     private int appSize;
     String Str;
     int hour,minute,second;
+    Notification.Builder builder;
+    PendingIntent contentIntent;
 
     @Override
     protected void onStart() {
         super.onStart();
-        Notification.Builder builder = new Notification.Builder(MainActivity.this);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
+        builder = new Notification.Builder(MainActivity.this);
+        contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
         builder.setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("DrinkSafe")
                 .setContentText("Click to go to the app")
@@ -126,16 +128,15 @@ public class MainActivity extends Activity {
         }
         Gson gson = new Gson();
         String json = preferences.getString("MyObject", "");
-        String json2 = preferences.getString("MyObject2", "");
         countDownTimer = gson.fromJson(json, CountDownTimer.class);
-        countTxt = gson.fromJson(json2, TextView.class);
     }
     public void countDownTimer(){
         countDownTimer = new CountDownTimer(MILLISINFUTURE, COUNT_DOWN_INTERVAL) {
             public void onTick(long millisUntilFinished) {
                 sum(millisUntilFinished);
                 Str = String.format("%02d: %02d: %02d",hour,minute,second);
-                getTextView().setText(Str);
+                builder.setContentText(Str);
+                countTxt.setText(Str);
             }
             public void onFinish() {
                 countTxt.setText(String.valueOf("Finish ."));
@@ -144,12 +145,6 @@ public class MainActivity extends Activity {
                 startActivity(intent);
                 finish();
             }
-//            public void onPause(){
-//                SharedPreferences.Editor editor =
-//                        getSharedPreferences("PREF_NAME", MODE_PRIVATE).edit();
-//                editor.putInt("PAUSED_TIME", currentTime-System.currentTimeMillis());
-//                editor.commit();
-//            }
         };
     }
     public void sum(long millisUntilFinished){
@@ -184,9 +179,7 @@ public class MainActivity extends Activity {
 
         Gson gson = new Gson();
         String json = gson.toJson(countDownTimer);
-        String json2 = gson.toJson(countTxt);
         editor.putString("MyObject", json);
-        editor.putString("MyObject2", json2);
         editor.commit();
     }
     public void onCreateContextMenu (ContextMenu menu, View
