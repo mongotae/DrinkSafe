@@ -19,7 +19,6 @@ public class WindowChangeDetectingService extends AccessibilityService {
             applist = mc.checkedAppList;
             if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED && applist != null) {
                 for (String app : applist) {
-                    Log.d("wodus",app +", "+event.getPackageName());
                     if (event.getPackageName().toString().compareTo(app)==0) {
                         gotoHome();
                         break;

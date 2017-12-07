@@ -71,7 +71,6 @@ public class BlockingAppList extends Activity{
                     app_info[counter] = new AppInfo(pm.getApplicationIcon(applicationInfo),
                             String.valueOf(pm.getApplicationLabel(applicationInfo)));
                     packageNm.add(applicationInfo.processName);
-                    Log.d("wodus", applicationInfo.processName);
                 }
                 catch(Exception e){
                     e.printStackTrace();

@@ -23,8 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import static java.lang.Thread.sleep;
-
 public class SMSmain extends Service {
     LocationManager lm;
     static String PHONE_NUMBER;
