@@ -23,10 +23,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import static java.lang.Thread.sleep;
+
 public class SMSmain extends Service {
     LocationManager lm;
     static String PHONE_NUMBER;
-    static String MESSAGE = "I'm drunken!! http://maps.google.com/?q=";
+    String header = "I'm drunken!! http://maps.google.com/?q=";
+    static String MESSAGE = "";
     private int SIM_STATE;
     private BroadcastReceiver mybroadcast=null;
     TextView tv;
@@ -34,7 +37,7 @@ public class SMSmain extends Service {
     String str;
 
     @Override
-    public void onStart(Intent intent, int startId) {
+    public int onStartCommand(Intent intent, int flags, int startId) {
         PHONE_NUMBER = intent.getStringExtra("phone");
         if(PHONE_NUMBER!=null) {
         lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -48,25 +51,27 @@ public class SMSmain extends Service {
             // for ActivityCompat#requestPermissions for more details.
             Toast.makeText(getBaseContext(), "Please turn on GPS",
                     Toast.LENGTH_LONG).show();
-            return;
         }
         try {
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                    100,
+                    1,
+                    mLocationListener);
             Thread.sleep(3000);
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                100,
-                1,
-                mLocationListener);
-            Thread.sleep(3000);
-        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                100,
-                1,
-                mLocationListener);
-            Thread.sleep(3000);
+            if (MESSAGE==null) {
+                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                        100,
+                        1,
+                        mLocationListener);
+                Thread.sleep(3000);
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-            sendSMS();
+        if(MESSAGE=="") MESSAGE=MESSAGE+header;
+        sendSMS();
         }
+        return START_NOT_STICKY;
     }
 
     public void onDestroy(){
@@ -91,7 +96,7 @@ public class SMSmain extends Service {
             float accuracy = location.getAccuracy();
             String provider = location.getProvider();
             str=latitude+","+longitude;
-            MESSAGE = MESSAGE+str;
+            MESSAGE = header+str;
         }
         public void onProviderDisabled(String provider) {
             Log.d("test", "onProviderDisabled, provider:" + provider);

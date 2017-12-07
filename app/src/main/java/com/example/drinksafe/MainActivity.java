@@ -31,13 +31,13 @@ public class MainActivity extends Activity {
     final int CONTEXT_MENU_VIEW = 1;
     final int CONTEXT_MENU_EDIT = 2;
     ProgressBar progressBar;
-    private static final int MILLISINFUTURE = 11*1000;
+    private static final int MILLISINFUTURE = 7200*1000;
     private static final int COUNT_DOWN_INTERVAL = 1000;
     public static long[] check = null;
     public static String phone = "";
     public static String[] nameList;
     private TextView countTxt;
-    private CountDownTimer countDownTimer;
+    public static CountDownTimer countDownTimer;
     public static ArrayList<String> checkedAppList;
     public static ArrayList<Integer> checkedAppIndexList;
     public static boolean flag = false;
@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
     int hour,minute,second;
     Notification.Builder builder;
     PendingIntent contentIntent;
-    public static Ringtone r;
+
 
     @Override
     protected void onStart() {
@@ -67,6 +67,18 @@ public class MainActivity extends Activity {
                 | Notification.FLAG_ONGOING_EVENT;
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(1, notification);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(flag==false){
+            lock.setEnabled(true);
+            unlock.setEnabled(false);
+        }else{
+            lock.setEnabled(false);
+            unlock.setEnabled(true);
+        }
     }
 
     @Override
@@ -94,8 +106,8 @@ public class MainActivity extends Activity {
                     countDownTimer.start();
                 }
                 flag = true;
-                lock.setEnabled(false);
-                unlock.setEnabled(true);
+                if(flag==true)lock.setEnabled(false);
+                if(flag==true)unlock.setEnabled(true);
                 Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
                 Toast.makeText(MainActivity.this, "You have to check accesiibility permission!!!",Toast.LENGTH_LONG).show();
                 startActivityForResult(intent, 0);
@@ -103,7 +115,13 @@ public class MainActivity extends Activity {
         });
 
         unlock = (Button)findViewById(R.id.unlock);
-        unlock.setEnabled(false);
+        if(flag==false){
+            unlock.setEnabled(false);
+            lock.setEnabled(true);
+        }else{
+            unlock.setEnabled(true);
+            lock.setEnabled(false);
+        }
         unlock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,6 +158,7 @@ public class MainActivity extends Activity {
         Gson gson = new Gson();
         String json = preferences.getString("MyObject", "");
         countDownTimer = gson.fromJson(json, CountDownTimer.class);
+        flag= preferences.getBoolean("Flag",false);
     }
 
     public void countDownTimer(){
@@ -147,8 +166,7 @@ public class MainActivity extends Activity {
             public void onTick(long millisUntilFinished) {
                 sum(millisUntilFinished);
                 Str = String.format("%02d: %02d: %02d",hour,minute,second);
-                builder.setContentText(Str);
-                countTxt.setText(Str);
+                MainActivity.this.countTxt.setText(Str);
             }
             public void onFinish() {
                 countTxt.setText(String.valueOf("Finish ."));
@@ -194,6 +212,7 @@ public class MainActivity extends Activity {
         }
         Gson gson = new Gson();
         String json = gson.toJson(countDownTimer);
+        editor.putBoolean("Flag", flag);
         editor.putString("MyObject", json);
         editor.commit();
     }

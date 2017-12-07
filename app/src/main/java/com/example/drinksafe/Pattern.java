@@ -44,12 +44,8 @@ public class Pattern extends Activity {
                     materialLockView.setDisplayMode(MaterialLockView.DisplayMode.Correct);
                     patternCheckThread.interrupt();
                     mc.flag=false;
+                    if(mc.countDownTimer!=null) mc.countDownTimer.onFinish();
                     passFlag=true;
-                    Intent intent = new Intent(Pattern.this, MainActivity.class);
-                    MainActivity.lock.setEnabled(true);
-                    MainActivity.unlock.setEnabled(false);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 }
                 super.onPatternDetected(pattern, SimplePattern);
