@@ -4,10 +4,17 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Vibrator;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,10 +23,13 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+
+import static java.lang.Thread.sleep;
 
 public class MainActivity extends Activity {
     final int CONTEXT_MENU_VIEW = 1;
@@ -37,10 +47,13 @@ public class MainActivity extends Activity {
     public static boolean flag = false;
     private int size;
     private int appSize;
+    public static Button lock;
+    public static Button unlock;
     String Str;
     int hour,minute,second;
     Notification.Builder builder;
     PendingIntent contentIntent;
+    public static Ringtone r;
 
     @Override
     protected void onStart() {
@@ -60,7 +73,9 @@ public class MainActivity extends Activity {
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(1, notification);
     }
-
+    public Button getLock(){
+        return lock;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +85,7 @@ public class MainActivity extends Activity {
         if(countTxt==null) countTxt = (TextView)findViewById(R.id.count_txt);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
 
-        Button lock = (Button)findViewById(R.id.lock);
+        lock = (Button)findViewById(R.id.lock);
         lock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,12 +100,15 @@ public class MainActivity extends Activity {
                     countDownTimer.start();
                 }
                 flag = true;
+                lock.setEnabled(false);
+                unlock.setEnabled(true);
                 Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                Toast.makeText(MainActivity.this, "You have to check accesiibility permission!!!",Toast.LENGTH_LONG).show();
                 startActivityForResult(intent, 0);
             }
         });
-
-        Button unlock = (Button)findViewById(R.id.unlock);
+        unlock = (Button)findViewById(R.id.unlock);
+        unlock.setEnabled(false);
         unlock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,6 +161,17 @@ public class MainActivity extends Activity {
                 progressBar.setVisibility(View.INVISIBLE);
                 Intent intent = new Intent(MainActivity.this, Voice.class);
                 startActivity(intent);
+                try {
+                    final Vibrator vibrator= (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+                    long[] pattern = {100,300,100,700,300,2000};
+                    vibrator.vibrate(pattern,-1);
+                    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+                    r.setStreamType(AudioManager.STREAM_ALARM);
+                    r.play();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         };

@@ -17,10 +17,12 @@ import java.util.List;
 public class Pattern extends AppCompatActivity {
     private String CorrectPattern = "123";
     private MaterialLockView materialLockView;
-    private String[] key = {"1234", "4567", "123", "4589", "4753"};
+    private String[] key = {"16748", "248651", "321478965", "47852369", "51832496","67485923", "748596321", "87692451","94381672"};
     private int ran;
     private boolean passFlag = false;
     MainActivity mc;
+    Thread patternCheckThread;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,9 +45,12 @@ public class Pattern extends AppCompatActivity {
                     finish();
                 } else {
                     materialLockView.setDisplayMode(MaterialLockView.DisplayMode.Correct);
+                    patternCheckThread.interrupt();
                     mc.flag=false;
                     passFlag=true;
                     Intent intent = new Intent(Pattern.this, MainActivity.class);
+                    MainActivity.lock.setEnabled(true);
+                    MainActivity.unlock.setEnabled(false);
                     startActivity(intent);
                     finish();
                 }
@@ -75,6 +80,18 @@ public class Pattern extends AppCompatActivity {
             }
         });
         tv.setText(key[ran]);
+        patternCheckThread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    super.run();
+                    sleep(300000);
+                    Pattern.super.finish();
+                } catch (Exception e) {
+                }
+            }
+        };
+        patternCheckThread.start();
     }
     public static int randomRange(int n1, int n2) {
         return (int) (Math.random() * (n2 - n1 + 1)) + n1;

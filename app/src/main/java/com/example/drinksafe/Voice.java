@@ -23,6 +23,7 @@ public class Voice extends Activity{
     private int count2=0;
     private boolean passFlag = false;
     MainActivity mc;
+    Thread voiceCheckThread;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +46,19 @@ public class Voice extends Activity{
                 startActivityForResult(i, RESULT_SPEECH);
             }
         });
+
+        voiceCheckThread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    super.run();
+                    sleep(300000);
+                    Voice.super.finish();
+                } catch (Exception e) {
+                }
+            }
+        };
+        voiceCheckThread.start();
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -61,6 +75,7 @@ public class Voice extends Activity{
                                     passFlag=true;
                                     Intent i = new Intent(Voice.this, Pattern.class);
                                     startActivity(i);
+                                    voiceCheckThread.interrupt();
                                     finish();
                                 }
                             })
