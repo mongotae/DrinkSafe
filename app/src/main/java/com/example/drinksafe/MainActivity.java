@@ -60,6 +60,7 @@ public class MainActivity extends Activity {
                 .setContentTitle("DrinkSafe")
                 .setContentText("Click to go to the app")
                 .setContentIntent(contentIntent)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setAutoCancel(false);
         Notification notification = builder.getNotification();
         notification.flags |= Notification.FLAG_NO_CLEAR
