@@ -5,6 +5,7 @@ package com.example.drinksafe;
  */
 import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
+import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import java.util.ArrayList;
 
@@ -18,10 +19,11 @@ public class WindowChangeDetectingService extends AccessibilityService {
             applist = mc.checkedAppList;
             if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED && applist != null) {
                 for (String app : applist) {
-                    if (app.equals(event.getPackageName())) {
+                    Log.d("wodus",app +", "+event.getPackageName());
+                    if (event.getPackageName().toString().compareTo(app)==0) {
                         gotoHome();
+                        break;
                     }
-                    break;
                 }
             }
         }

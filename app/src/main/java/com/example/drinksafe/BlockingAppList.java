@@ -1,11 +1,13 @@
 package com.example.drinksafe;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +51,7 @@ public class BlockingAppList extends Activity{
         }
 
 
+        @SuppressLint("WrongConstant")
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
@@ -68,6 +71,7 @@ public class BlockingAppList extends Activity{
                     app_info[counter] = new AppInfo(pm.getApplicationIcon(applicationInfo),
                             String.valueOf(pm.getApplicationLabel(applicationInfo)));
                     packageNm.add(applicationInfo.processName);
+                    Log.d("wodus", applicationInfo.processName);
                 }
                 catch(Exception e){
                     e.printStackTrace();

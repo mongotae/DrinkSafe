@@ -44,7 +44,7 @@ public class Pattern extends Activity {
                     materialLockView.setDisplayMode(MaterialLockView.DisplayMode.Correct);
                     patternCheckThread.interrupt();
                     mc.flag=false;
-                    if(mc.countDownTimer!=null) mc.countDownTimer.onFinish();
+                    if(mc.countDownTimer!=null) mc.countDownTimer.cancel();
                     passFlag=true;
                     finish();
                 }
