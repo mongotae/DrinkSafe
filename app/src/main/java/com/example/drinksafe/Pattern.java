@@ -36,8 +36,8 @@ public class Pattern extends Activity {
                     i.putExtra("phone", mc.phone);
                     i.setPackage("com.example.drinksafe");
                     startService(i);
-                    Intent intent = new Intent(Pattern.this, MainActivity.class);
-                    startActivity(intent);
+//                    Intent intent = new Intent(Pattern.this, MainActivity.class);
+//                    startActivity(intent);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     finish();
                 } else {

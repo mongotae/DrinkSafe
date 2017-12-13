@@ -79,7 +79,6 @@ public class GuardianList extends ListActivity {
         }
         private Cursor getURI() {
                 Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-
                 String[] projection = new String[] {
                         ContactsContract.Contacts._ID,
                         ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,

@@ -46,11 +46,8 @@ public class BlockingAppList extends Activity{
     }
 
     public static class PlaceholderFragment extends Fragment {
-
         public PlaceholderFragment() {
         }
-
-
         @SuppressLint("WrongConstant")
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,

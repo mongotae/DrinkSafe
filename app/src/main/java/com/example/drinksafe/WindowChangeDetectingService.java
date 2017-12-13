@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 public class WindowChangeDetectingService extends AccessibilityService {
     MainActivity mc;
-
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         if(mc.flag==true && mc.checkedAppList!=null) {

@@ -25,6 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.gson.Gson;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class MainActivity extends Activity {
     final int CONTEXT_MENU_VIEW = 1;
@@ -94,19 +96,16 @@ public class MainActivity extends Activity {
         lock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressBar = (ProgressBar)findViewById(R.id.progressBar);
-                switch (v.getId()) {
-                    case R.id.lock:
-                        progressBar.setVisibility(View.VISIBLE);
-                        break;
-                }
                 if(countDownTimer==null) {
                     countDownTimer();
                     countDownTimer.start();
                 }
                 flag = true;
-                if(flag==true)lock.setEnabled(false);
-                if(flag==true)unlock.setEnabled(true);
+                if(flag==true){
+                    lock.setEnabled(false);
+                    unlock.setEnabled(true);
+                    progressBar.setVisibility(View.VISIBLE);
+                }
                 Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
                 Toast.makeText(MainActivity.this, "You have to check accesiibility permission!!!",Toast.LENGTH_LONG).show();
                 startActivityForResult(intent, 0);
@@ -117,9 +116,11 @@ public class MainActivity extends Activity {
         if(flag==false){
             unlock.setEnabled(false);
             lock.setEnabled(true);
+            progressBar.setVisibility(View.INVISIBLE);
         }else{
             unlock.setEnabled(true);
             lock.setEnabled(false);
+            progressBar.setVisibility(View.VISIBLE);
         }
         unlock.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,7 +166,7 @@ public class MainActivity extends Activity {
             public void onTick(long millisUntilFinished) {
                 sum(millisUntilFinished);
                 Str = String.format("%02d: %02d: %02d",hour,minute,second);
-                MainActivity.this.countTxt.setText(Str);
+                ((TextView) findViewById(R.id.count_txt)).setText(Str);
             }
             public void onFinish() {
                 countTxt.setText(String.valueOf("Finish ."));
@@ -184,7 +185,6 @@ public class MainActivity extends Activity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                finish();
             }
         };
     }
@@ -244,11 +244,25 @@ public class MainActivity extends Activity {
 
     protected void onSaveInstanceState(Bundle outState){
         outState.putLongArray("checked",check);
+        outState.putString("phone",phone);
+        outState.putStringArrayList("checkedAppList",checkedAppList);
+        outState.putIntegerArrayList("checkedAppIndexList",checkedAppIndexList);
+        outState.putBoolean("Flag", flag);
+        Gson gson = new Gson();
+        String json = gson.toJson(countDownTimer);
+        outState.putString("MyObject", json);
         super.onSaveInstanceState(outState);
     }
 
     public void onRestoreInstanceState(Bundle savedInstanceState){
         super.onRestoreInstanceState(savedInstanceState);
         check=savedInstanceState.getLongArray("checked");
+        phone=savedInstanceState.getString("phone");
+        checkedAppList=savedInstanceState.getStringArrayList("checkedAppList");
+        checkedAppIndexList=savedInstanceState.getIntegerArrayList("checkedAppIndexList");
+        flag=savedInstanceState.getBoolean("Flag");
+        String json = savedInstanceState.getString("MyObject");
+        Gson gson = new Gson();
+        countDownTimer=gson.fromJson(json,CountDownTimer.class);
     }
 }
